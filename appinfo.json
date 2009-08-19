@@ -1,0 +1,15 @@
+{
+	"title": "Terminal",
+	"id": "org.webosinternals.terminal",
+	"version": "0.1.8",
+	"release_date":	"16-Aug-2009",
+	"vendor": "WebOS Internals",
+	"vendor_email":	"support@webos-internals.org",
+	"vendor_url": "http://www.webos-internals.org/wiki/Application:Terminal",
+	"type":	"web",
+	"main":	"index.html",
+	"icon":	"icon.png",
+	"noWindow": true,
+	"theme" : "light",
+	"noDeprecatedStyles" : true 
+}

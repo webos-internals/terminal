@@ -1,0 +1,1 @@
+* Preferences need to be stored in a model, only controllers update modules, scenes need to listed to model change events and then update the scene accordingly

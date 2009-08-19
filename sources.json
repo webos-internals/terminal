@@ -1,0 +1,6 @@
+[
+	{ "source": "app\/controllers\/app-assistant.js" },
+	{ "source": "app\/controllers\/session-assistant.js" },
+	{ "source": "app\/controllers\/prefs-assistant.js" },
+	{ "source": "app\/models\/TerminalDepot.js" },
+]
