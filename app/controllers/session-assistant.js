@@ -3,6 +3,7 @@ Prefs.fontWidth=8;
 Prefs.fontHeight=8;
 Prefs.fgColor=7;
 Prefs.bgColor=0;
+Prefs.user = "root";
 
 function SessionAssistant() {
 
@@ -23,8 +24,10 @@ SessionAssistant.prototype.prefsGet = function(val) {
 	try {
 		Mojo.Log.info("SessionAssistant#prefsGet");
 		if(val) {
-			//Mojo.Log.info("got prefs from DB: fg:" + val.fgColor + ", Prefs.fgColor:" + Prefs.fgColor + ", bg:" + val.bgColor + ", Prefs.bgColor:" + Prefs.bgColor);
+			//Mojo.Log.info("got prefs from DB: fg:" + val.fgColor + ", Prefs.fgColor:" + Prefs.fgColor + ", bg:" + val.bgColor + ", Prefs.bgColor:" + Prefs.bgColor + ", Prefs.user:[" + Prefs.user + "]");
 			Prefs = val;
+			if(!Prefs.user)
+				Prefs.user = "root";
 			this.termplugin.setColors(Prefs.fgColor,Prefs.bgColor);
 			this.termplugin.setFont(Prefs.fontWidth,Prefs.fontHeight);
 			this.termplugin.setTerminalHeight(this.terminalHeight);
@@ -153,7 +156,7 @@ SessionAssistant.prototype.activate = function(event) {
 	//Mojo.Log.info("this.terminalWidth:" + this.terminalWidth + ", this.terminalHeight:" + this.terminalHeight);
 	this.termplugin.setFont(Prefs.fontWidth,Prefs.fontHeight);
 	this.termplugin.setTerminalHeight(this.terminalHeight);
-	this.termplugin.start("root");
+	this.termplugin.start(Prefs.user);
 	this.controller.document.addEventListener("keydown", this._onKeyDownEventHandler, true);
 	this.termplugin.scroller = this.scroller;	//	store the scroller object in plugin, so that plugin can scroll as needed
 	this.termplugin.keyStatesParentObj = this;
@@ -170,6 +173,7 @@ SessionAssistant.prototype.deactivate = function(event) {
 	this.termplugin.scroller = undefined;
 	this.termplugin.keyStatesParentObj = undefined;
 	this.controller.document.removeEventListener("keydown", this._onKeyDownEventHandler, true);
+	//Mojo.Event.stopListening(this._onKeyDownEventHandler, "keydown", );
 
 }
 SessionAssistant.prototype.orientationChanged = function(orientation) {
