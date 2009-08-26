@@ -15,7 +15,7 @@ function SessionAssistant() {
 	this.terminalHeight = undefined;
 	this.scroller = undefined;
 
-	this._onKeyDownEventHandler = this._onKeyDownEvent.bind(this);
+	//this._onKeyDownEventHandler = this._onKeyDownEvent.bind(this);
 	this.keyStatesChanged = this._keyStatesChanged.bind(this);
 	
 }
@@ -123,6 +123,8 @@ SessionAssistant.prototype.setup = function() {
 		this.placeholder = this.controller.get('install_object_here');
 		this.placeholder.parentNode.replaceChild(this.termplugin, this.placeholder);
 		this.termplugin.drawEnabled = false;		//	don't draw anything untill we read prefs
+		//this.termplugin.setAttribute("x-palm-cache-plugin", true);
+		this.termplugin.setAttribute(Mojo.Gesture.consumesEnterAttribute,true);
 
 
 	} catch (e) {
@@ -157,7 +159,7 @@ SessionAssistant.prototype.activate = function(event) {
 	this.termplugin.setFont(Prefs.fontWidth,Prefs.fontHeight);
 	this.termplugin.setTerminalHeight(this.terminalHeight);
 	this.termplugin.start(Prefs.user);
-	this.controller.document.addEventListener("keydown", this._onKeyDownEventHandler, true);
+	//this.controller.document.addEventListener("keydown", this._onKeyDownEventHandler, true);
 	this.termplugin.scroller = this.scroller;	//	store the scroller object in plugin, so that plugin can scroll as needed
 	this.termplugin.keyStatesParentObj = this;
 	//Mojo.Log.info("setColors(" + Prefs.fgColor, Prefs.bgColor + ")");
@@ -172,8 +174,8 @@ SessionAssistant.prototype.deactivate = function(event) {
 	Mojo.Log.info("SessionAssistant#deactivate");
 	this.termplugin.scroller = undefined;
 	this.termplugin.keyStatesParentObj = undefined;
-	this.controller.document.removeEventListener("keydown", this._onKeyDownEventHandler, true);
-	//Mojo.Event.stopListening(this._onKeyDownEventHandler, "keydown", );
+	//this.controller.document.removeEventListener("keydown", this._onKeyDownEventHandler, true);
+	////Mojo.Event.stopListening(this._onKeyDownEventHandler, "keydown", );
 
 }
 SessionAssistant.prototype.orientationChanged = function(orientation) {
@@ -191,7 +193,7 @@ SessionAssistant.prototype.cleanup = function(event) {
 	Mojo.Log.info("SessionAssistant#cleanup");
 
 }
-
+/*
 SessionAssistant.prototype._onKeyDownEvent = function(event) {
 
 	if (event.keyCode==13) {
@@ -199,7 +201,7 @@ SessionAssistant.prototype._onKeyDownEvent = function(event) {
 	}
 
 }
-
+*/
 
 SessionAssistant.prototype.newCard = function(scene,stagename) {
 	var appController = Mojo.Controller.getAppController();
