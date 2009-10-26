@@ -7,7 +7,7 @@ function AppAssistant(appController) {
 AppAssistant.prototype.handleLaunch = function(params) {
 
 	if (this.depot.isFirstUseComplete() !== true) {
-		console.log("\n\n     FIRST RUN NOT COMPLETE     \n\n");
+		//console.log("\n\n     FIRST RUN NOT COMPLETE     \n\n");
 		var defaults = {
 				'fontWidth': 8,
 				'fontHeight': 8,
@@ -17,7 +17,7 @@ AppAssistant.prototype.handleLaunch = function(params) {
 		this.depot.setPreferences(defaults);
 		this.depot.setFirstUseComplete();
 	} else {
-		console.log("\n\n     FIRST RUN IS COMPLETE     \n\n");
+		//console.log("\n\n     FIRST RUN IS COMPLETE     \n\n");
 	}
 
 	try {
@@ -53,7 +53,7 @@ AppAssistant.prototype.handleLaunch = function(params) {
 
 		} else if(params.banner) {
 
-			Mojo.Log.warn("Notifications not yet implemented.");
+			//Mojo.Log.warn("Notifications not yet implemented.");
 
 		}
 

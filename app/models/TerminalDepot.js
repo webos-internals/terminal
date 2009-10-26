@@ -26,7 +26,7 @@ TerminalDepot.prototype.getPreferences = function(callback) {
 
 TerminalDepot.prototype._depotReady = function() {
 	this.depot.simpleGet('firstUseComplete', function(firstUseComplete) {
-		Mojo.Log.info("firstUseComplete = "+firstUseComplete);
+		//Mojo.Log.info("firstUseComplete = "+firstUseComplete);
 		this.firstUseComplete = firstUseComplete;
 	}.bind(this));
 }

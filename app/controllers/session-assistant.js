@@ -22,7 +22,7 @@ function SessionAssistant() {
 
 SessionAssistant.prototype.prefsGet = function(val) {
 	try {
-		Mojo.Log.info("SessionAssistant#prefsGet");
+		//Mojo.Log.info("SessionAssistant#prefsGet");
 		if(val) {
 			//Mojo.Log.info("got prefs from DB: fg:" + val.fgColor + ", Prefs.fgColor:" + Prefs.fgColor + ", bg:" + val.bgColor + ", Prefs.bgColor:" + Prefs.bgColor + ", Prefs.user:[" + Prefs.user + "]");
 			Prefs = val;
@@ -43,7 +43,7 @@ SessionAssistant.prototype.prefsGet = function(val) {
 
 SessionAssistant.prototype.prefsOpenReadOk = function() {
 	try {
-		Mojo.Log.info("SessionAssistant#prefsOpenReadOk");
+		//Mojo.Log.info("SessionAssistant#prefsOpenReadOk");
 		this.db.get(
 				"prefs",
 				this.prefsGet.bind(this),
@@ -59,7 +59,7 @@ SessionAssistant.prototype.prefsOpenReadOk = function() {
 }
 SessionAssistant.prototype.prefsRead = function() {
 	try {
-		Mojo.Log.info("SessionAssistant#prefsRead");
+		//Mojo.Log.info("SessionAssistant#prefsRead");
 		this.db = new Mojo.Depot(
 			{ name:"terminalPrefs", version:1, estimatedSize:100, replace:false },
 			this.prefsOpenReadOk.bind(this),
@@ -78,7 +78,7 @@ SessionAssistant.prototype.setup = function() {
 
 	try {
 
-		Mojo.Log.info("SessionAssistant#setup");
+		//Mojo.Log.info("SessionAssistant#setup");
 		this.prefsRead();
 		var targetWindow = this.controller.window;
 		if (targetWindow.PalmSystem && targetWindow.PalmSystem.setWindowOrientation) {
@@ -94,7 +94,8 @@ SessionAssistant.prototype.setup = function() {
 				visible: true,
 				items: [
 			            {label: "New Session", command: 'do-newSession'},
-			            { label: "Preferences...", command: 'do-prefs' },
+			            {label: "Non-Obvious Keys...", command: 'do-keys'},
+			            {label: "Preferences...", command: 'do-prefs'},
 				        ]
 		}
 		
@@ -129,7 +130,7 @@ SessionAssistant.prototype.setup = function() {
 
 	} catch (e) {
 
-		Mojo.Log.logException(e, 'PageAssistant#setup');
+		//Mojo.Log.logException(e, 'SessionAssistant#setup');
 
 	}
 
@@ -142,36 +143,45 @@ SessionAssistant.prototype._keyStatesChanged = function(gesture, red, sym, shift
 //	0 - Off
 //	1 - On
 //	2 - Locked (on)
-	try
-		{
-		Mojo.Log.info("*** _keyStatesChanged: gesture:" + gesture + " red:" + red + " sym:" + sym + " shift:" + shift);
-		}
-	catch(e)
-		{
+	try {
+		//Mojo.Log.info("*** _keyStatesChanged: gesture:" + gesture + " red:" + red + " sym:" + sym + " shift:" + shift);
+	} catch(e) {
 		Mojo.Log.logException(e);
-		}
+	}
 }
 
 SessionAssistant.prototype.activate = function(event) {
-
-	Mojo.Log.info("SessionAssistant#activate");
-	//Mojo.Log.info("this.terminalWidth:" + this.terminalWidth + ", this.terminalHeight:" + this.terminalHeight);
-	this.termplugin.setFont(Prefs.fontWidth,Prefs.fontHeight);
-	this.termplugin.setTerminalHeight(this.terminalHeight);
-	this.termplugin.start(Prefs.user);
-	//this.controller.document.addEventListener("keydown", this._onKeyDownEventHandler, true);
-	this.termplugin.scroller = this.scroller;	//	store the scroller object in plugin, so that plugin can scroll as needed
-	this.termplugin.keyStatesParentObj = this;
-	//Mojo.Log.info("setColors(" + Prefs.fgColor, Prefs.bgColor + ")");
-	this.termplugin.setColors(Prefs.fgColor,Prefs.bgColor);
-	this.termplugin.focus();
-	this.scroller.mojo.revealBottom();
-
+	try {
+		//Mojo.Log.info("SessionAssistant#activate");
+		//Mojo.Log.info("this.terminalWidth:" + this.terminalWidth + ", this.terminalHeight:" + this.terminalHeight);
+		if ((typeof this.termplugin.setFont) == 'function') { // to test if the plugin is there
+			this.termplugin.setFont(Prefs.fontWidth, Prefs.fontHeight);
+			this.termplugin.setTerminalHeight(this.terminalHeight);
+			this.termplugin.start(Prefs.user);
+			//this.controller.document.addEventListener("keydown", this._onKeyDownEventHandler, true);
+			this.termplugin.scroller = this.scroller; //	store the scroller object in plugin, so that plugin can scroll as needed
+			this.termplugin.keyStatesParentObj = this;
+			//Mojo.Log.info("setColors(" + Prefs.fgColor, Prefs.bgColor + ")");
+			this.termplugin.setColors(Prefs.fgColor, Prefs.bgColor);
+			this.termplugin.focus();
+			this.scroller.mojo.revealBottom();
+		} else {
+			this.controller.showAlertDialog({
+			    onChoose: function(value) {},
+				allowHTMLMessage: true,
+			    title: 'Terminal',
+			    message: 'Termplugin is not installed. This app is unusable without it.',
+			    choices:[{label:$L('Ok'), value:""}]
+		    });
+		}
+	} catch (e) {
+		Mojo.Log.logException(e, 'SessionAssistant#activate');
+	}
 }
 
 
 SessionAssistant.prototype.deactivate = function(event) {
-	Mojo.Log.info("SessionAssistant#deactivate");
+	//Mojo.Log.info("SessionAssistant#deactivate");
 	this.termplugin.scroller = undefined;
 	this.termplugin.keyStatesParentObj = undefined;
 	//this.controller.document.removeEventListener("keydown", this._onKeyDownEventHandler, true);
@@ -179,18 +189,18 @@ SessionAssistant.prototype.deactivate = function(event) {
 
 }
 SessionAssistant.prototype.orientationChanged = function(orientation) {
-	Mojo.Log.info("SessionAssistant#orientationChanged");
+	//Mojo.Log.info("SessionAssistant#orientationChanged");
 	this.terminalWidth = this.controller.window.innerWidth;
 	this.terminalHeight = this.controller.window.innerHeight;
 	this.termplugin.width = this.terminalWidth;
 	this.scroller.setStyle({'height':this.terminalHeight+5+'px'});
 	this.termplugin.setTerminalHeight(this.terminalHeight);
-	Mojo.Log.info("SessionAssistant#orientationChanged: this.terminalWidth:" + this.terminalWidth + ", this.terminalHeight:" + this.terminalHeight);
+	//Mojo.Log.info("SessionAssistant#orientationChanged: this.terminalWidth:" + this.terminalWidth + ", this.terminalHeight:" + this.terminalHeight);
 }
 
 SessionAssistant.prototype.cleanup = function(event) {
 
-	Mojo.Log.info("SessionAssistant#cleanup");
+	//Mojo.Log.info("SessionAssistant#cleanup");
 
 }
 /*
@@ -227,6 +237,13 @@ SessionAssistant.prototype.handleCommand = function(event) {
 			var appController = Mojo.Controller.getAppController();
 			var stageController = appController.getActiveStageController();
 			stageController.pushScene('prefs');
+			//this.newCard("prefs", "prefs");
+			break;
+
+		case 'do-keys':
+			var appController = Mojo.Controller.getAppController();
+			var stageController = appController.getActiveStageController();
+			stageController.pushScene('keys');
 			//this.newCard("prefs", "prefs");
 			break;
 

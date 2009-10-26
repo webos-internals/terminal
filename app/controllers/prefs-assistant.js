@@ -19,7 +19,7 @@ PrefsAssistant.prototype.prefsWriteDB = function() {
 }
 PrefsAssistant.prototype.prefsWrite = function() {
 	try {
-		Mojo.Log.info("PrefsAssistant#prefsWrite");
+		//Mojo.Log.info("PrefsAssistant#prefsWrite");
 		if(this.db) {
 			this.prefsWriteDB();
 		} else {
