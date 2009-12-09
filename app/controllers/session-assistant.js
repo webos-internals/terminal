@@ -213,14 +213,19 @@ SessionAssistant.prototype._onKeyDownEvent = function(event) {
 }
 */
 
-SessionAssistant.prototype.newCard = function(scene,stagename) {
+SessionAssistant.prototype.newCard = function(scene, stagename)
+{
 	var appController = Mojo.Controller.getAppController();
-	var f = function(stageController) {
-		stageController.pushScene(scene);       
-	};
-	appController.createStageWithCallback({name: stagename, lightweight: true}, f);
-	delete f;
-	delete appController;
+	var stageController = appController.getStageController(stagename);
+	if (stageController) {
+		stageController.popScenesTo(scene);
+		stageController.activate();
+	} else {
+		var f = function(stageController) {
+			stageController.pushScene(scene);       
+		};
+		appController.createStageWithCallback({name: stagename, lightweight: true}, f);
+	}
 }
 
 SessionAssistant.prototype.handleCommand = function(event) {
@@ -241,10 +246,7 @@ SessionAssistant.prototype.handleCommand = function(event) {
 			break;
 
 		case 'do-keys':
-			var appController = Mojo.Controller.getAppController();
-			var stageController = appController.getActiveStageController();
-			stageController.pushScene('keys');
-			//this.newCard("prefs", "prefs");
+			this.newCard("keys", "keys");
 			break;
 
 		}
