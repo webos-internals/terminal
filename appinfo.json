@@ -1,8 +1,8 @@
 {
 	"title": "Terminal",
 	"id": "org.webosinternals.terminal",
-	"version": "0.2.4",
-	"release_date":	"26-Aug-2009",
+	"version": "0.3.0",
+	"release_date":	"8-Jun-2010",
 	"vendor": "WebOS Internals",
 	"vendor_email":	"support@webos-internals.org",
 	"vendor_url": "http://www.webos-internals.org/wiki/Application:Terminal",
