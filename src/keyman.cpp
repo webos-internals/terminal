@@ -72,7 +72,16 @@ KeyManager::keyPressed(
 				case 'X': sendEnd(); break;
 				case 'C': sendDown(); break;
 				case 'V': sendNext(); break;
+				case 'Q': if (sym_state || ctrl_pressed) sendChar(28); else sendChar('\\'); break;
+				case 'L': sendChar('`'); break;
+				case 'H': sendChar('{'); break;
+				case 'J': sendChar('}'); break;
+				case 'Y': sendChar('['); break;
+				case 'U': sendChar(']'); break;
+				case 'A': sendChar('^'); break;
+				case 'S': sendChar('~'); break;
 				case '0': sendInsert(); break;
+
 				case dotKey: sendDelete(); break;
 				}
 				key_code = 0;
