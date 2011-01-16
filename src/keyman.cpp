@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "keyman.hpp"
 
 
@@ -32,6 +34,9 @@ KeyManager::keyPressed(
 		bool meta_pressed
 )
 {
+	FILE *f;
+	void *clipbuff;
+	int clipsize;
 	bool key_state_changed = false;
 	if (key_code==GestureAreaTap) {
 		// gesture area tap
@@ -71,7 +76,7 @@ KeyManager::keyPressed(
 				case 'G': sendRight(); break;
 				case 'X': sendEnd(); break;
 				case 'C': sendDown(); break;
-				case 'V': sendNext(); break;
+				case 'B': sendNext(); break;
 				case 'Q': if (sym_state || ctrl_pressed) sendChar(28); else sendChar('\\'); break;
 				case 'L': sendChar('`'); break;
 				case 'H': sendChar('{'); break;
@@ -81,7 +86,18 @@ KeyManager::keyPressed(
 				case 'A': sendChar('^'); break;
 				case 'S': sendChar('~'); break;
 				case '0': sendInsert(); break;
-
+				case 'V': 
+					if ((f=fopen("/tmp/webkit-clipboard","r"))!=NULL) {
+					fseek(f,0,SEEK_END);
+					clipsize=ftell(f);
+					clipbuff=malloc(clipsize);
+					fseek(f,0,SEEK_SET);
+					fread(clipbuff,1,clipsize,f);
+					fclose(f);
+					client().sendChars((char *)clipbuff,clipsize);
+					free(clipbuff);
+					}
+					break;
 				case dotKey: sendDelete(); break;
 				}
 				key_code = 0;
@@ -94,9 +110,9 @@ KeyManager::keyPressed(
 				key_code += 32;
 			}
 		}
-		else if (key_code=='0' && !red_state) {
-			key_code = '@';
-		}
+	/*	else if (key_code=='0' && !(red_state || alt_pressed)) {
+			key_code = '';
+		}*/
 		else if (key_code==32 && red_state) {
 			// escape
 			key_code = 27;
